@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1695465160 source:c:\users\youco\desktop\sas 21-09\saas\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+
