@@ -17,7 +17,7 @@ struct ToDo{
 };
 typedef struct ToDo todo;
 
-int total_taches=0,supp=0;
+int total_taches=0,taches_non_complets=0,taches_complets=0;
 int day,month,year,t = 0;
    //******************************************************************************************************************
    // les fonctions :
@@ -39,6 +39,7 @@ void ajouter_tache(todo *todos,int choix ){
             printf("entrez la description :");
             scanf(" %99[^\n]",todos[i].description);
             strcpy(todos[i].statut,"TO_DO");
+            taches_non_complets++;
             //on a ajoute / car l'utilisateur va tapper /
             printf("\nDonnez la date sous forme jj/mm/aaaa : ");
             scanf("%d/%d/%d",&todos[i].dead.jour,&todos[i].dead.mois,&todos[i].dead.annee);
@@ -158,12 +159,24 @@ void modifier_statut(todo *todos){
             if(stu==1 || stu==2 || stu ==3){
             switch(stu){
             case 1:
+                if(strcmp(todos[i].statut,"DONE")==0){
+                    taches_complets-=1;
+                    taches_non_complets+=1;
+                }
                 strcpy(todos[i].statut,"TO_DO");
                 break;
             case 2:
+                if(strcmp(todos[i].statut,"DONE")==0){
+                    taches_complets-=1;
+                    taches_non_complets+=1;
+                }
                 strcpy(todos[i].statut,"DOING");
                 break;
             case 3:
+                if(strcmp(todos[i].statut,"DOING")==0 || strcmp(todos[i].statut,"TO_DO")==0){
+                    taches_complets+=1;
+                    taches_non_complets-=1;
+                }
                 strcpy(todos[i].statut,"DONE");
                 break;
             }
@@ -227,7 +240,6 @@ void Modification(todo *todos){
 }
 
                                                         //Suppression :
-
 void Suppression(todo *todos){
     int id_,trouve,i,j;
     printf("\nEntrez l'id du tache a supprimer : ");
@@ -251,7 +263,6 @@ void Suppression(todo *todos){
 }
 
                                                         //recherche par titre:
-
 void Recherche_id(todo *todos){
     int id_,trouve=0,i;
     printf("\nEntrez l'id du tache a rechercher : ");
@@ -308,27 +319,46 @@ void Recherche(todo *todos){
 
                                                             //statistiques :
 
-//void Statistiques(){
-//        int choix;
-//        printf("1 : Afficher le nombre total des tachesn");
-//        printf("2 : Afficher le nombre de taches completes et incompletes\n");
-//        printf("3 : Afficher le nombre de jours restants jusqu'au delai de chaque tache\n");
-//        printf("0 : quitter\n");
-//        scanf("%d",&choix);
-//        printf("\n***********************************************\n\n");
-//        switch(choix){
-//            case 1:
-//            printf("\nle nombre total des taches est : %d\n",total_taches);
-//            break;
-//            case 2:
-//            Recherche_titre(todos);
-//            break;
+void Statistiques(){
+        int choix;
+        printf("1 : Afficher le nombre total des taches\n");
+        printf("2 : Afficher le nombre de taches completes et incompletes\n");
+        printf("3 : Afficher le nombre de jours restants jusqu'au delai de chaque tache\n");
+        printf("0 : quitter\n");
+        scanf("%d",&choix);
+        printf("\n***********************************************\n\n");
+        switch(choix){
+            case 1:
+            printf("\nle nombre total des taches est : %d\n",total_taches);
+            break;
+            case 2:
+            printf("\nle nombre des taches non complets est : %d\n",taches_non_complets);
+            printf("\nle nombre des taches complets est : %d\n",taches_complets);
+            break;
 //            case 3:
-//            Recherche_titre(todos);
+//                nbr_jours_restant();
 //            break;
-//            case 0:
-//            system("pause");
+            case 0:
+            system("pause");
+        }
+}
+
+//void nbr_jours_restant(){
+//    int nbr_jrs_mois[]={0,31,28,31,30,31,30,31,30,31,30,31,30},an_bissextile=365;
+//    for(i=0;i<total_taches;i++){
+//        if((todos[i].dead.annee%4)==0){
+//            if(todos[i].dead.annee%100==0){
+//                if(todos[i].dead.annee%400==0){
+//                    an_bissextile=366;
+//                    nbr_jrs_mois[2]=29;
+//            }
+//            }else {
+//                an_bissextile=366;
+//                nbr_jrs_mois[2]=29;
 //        }
+//    }
+//        printf("\nid : %d \ntitre : %s \ndescription : %s \nnombre de jours restants jusqu'au delai : %s",todos[i].id,todos[i].titre,todos[i].description,todos[i].dead.jour)
+//    }
 //}
 
 // fonction main ********************************************************************************************************************
@@ -379,9 +409,9 @@ int main()
             case 6:
             Recherche(todos);
             break;
-//            case 7:
-//            Statistiques();
-//            break;
+            case 7:
+            Statistiques();
+            break;
             case 0:
             printf("Merci !");
             system("pause");
