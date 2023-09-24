@@ -319,7 +319,7 @@ void Recherche(todo *todos){
 
                                                             //statistiques :
 
-void Statistiques(){
+void Statistiques(todo *todos){
         int choix;
         printf("1 : Afficher le nombre total des taches\n");
         printf("2 : Afficher le nombre de taches completes et incompletes\n");
@@ -335,31 +335,54 @@ void Statistiques(){
             printf("\nle nombre des taches non complets est : %d\n",taches_non_complets);
             printf("\nle nombre des taches complets est : %d\n",taches_complets);
             break;
-//            case 3:
-//                nbr_jours_restant();
-//            break;
+            case 3:
+                nbr_jours_restant(todos);
+            break;
             case 0:
             system("pause");
         }
 }
 
-//void nbr_jours_restant(){
-//    int nbr_jrs_mois[]={0,31,28,31,30,31,30,31,30,31,30,31,30},an_bissextile=365;
-//    for(i=0;i<total_taches;i++){
-//        if((todos[i].dead.annee%4)==0){
-//            if(todos[i].dead.annee%100==0){
-//                if(todos[i].dead.annee%400==0){
-//                    an_bissextile=366;
-//                    nbr_jrs_mois[2]=29;
-//            }
-//            }else {
-//                an_bissextile=366;
-//                nbr_jrs_mois[2]=29;
-//        }
-//    }
-//        printf("\nid : %d \ntitre : %s \ndescription : %s \nnombre de jours restants jusqu'au delai : %s",todos[i].id,todos[i].titre,todos[i].description,todos[i].dead.jour)
-//    }
-//}
+void nbr_jours_restant(todo *todos){
+    int nbr_jrs_mois[]={0,31,28,31,30,31,30,31,30,31,30,31,30},nbr_jours;
+    for(int i=0;i<total_taches;i++){
+        int mois_=todos[i].dead.mois;
+        int jours_=todos[i].dead.jour;
+        int nbr_annees=todos[i].dead.annee-year;
+        nbr_jours = 0;
+        //si l'annee entree est superieure ou egale a cette annee :
+        if(nbr_annees>0){
+                //nbr du jours jusqu'a fin de ce mois
+                nbr_jours +=nbr_jrs_mois[month]-day;
+                //nbr du jours + jours jusqu'a fin de cette annee
+                for(int j=month+1;j<=12;j++){
+                    nbr_jours+=nbr_jrs_mois[j];
+                }
+                //nbr du jours + jours des annee plus
+                nbr_jours+=365*(nbr_annees-1);
+                //nbr du jours + jours jusqu'a mois avans mois entré
+                for(int k=0;k<mois_;k++){
+                    nbr_jours+=nbr_jrs_mois[k];
+                }
+                //nbr du jours + nbr du jours entrés
+                nbr_jours+=jours_;
+        }else if(nbr_annees==0 && month<mois_){
+            //nbr du jours jusqu'a fin de ce mois
+                nbr_jours +=nbr_jrs_mois[month]-day;
+            //nbr du jours + jours jusqu'a mois avans mois entré
+                for(int k=month+1;k<mois_;k++){
+                    nbr_jours+=nbr_jrs_mois[k];
+                }
+            //nbr du jours + nbr du jours entrés
+            nbr_jours+=jours_;
+        }else if(nbr_annees==0 && month==mois_){
+            nbr_jours+=jours_-day;
+        }
+
+        printf("\nid : %d \ntitre : %s \ndescription : %s \nnombre de jours restants jusqu'au delai : %d\n",todos[i].id,todos[i].titre,todos[i].description,nbr_jours);
+
+    }
+}
 
 // fonction main ********************************************************************************************************************
 
@@ -410,7 +433,7 @@ int main()
             Recherche(todos);
             break;
             case 7:
-            Statistiques();
+            Statistiques(todos);
             break;
             case 0:
             printf("Merci !");
